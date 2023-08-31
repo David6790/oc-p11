@@ -53,7 +53,10 @@ body {
 
 .main-nav-item {
   text-decoration: none;
-  margin-right: 0.5rem;
+  margin-right: 0rem;
+}
+.main-nav-item i {
+  padding-right: 5px;
 }
 
 .main-nav-item:hover {
@@ -71,7 +74,7 @@ body {
 }
 
 .hero {
-  background-image: url("../img/bank-tree.jpeg");
+  background-image: url("../../public/img/bank-tree.jpeg");
   background-position: 0 -50px;
   background-size: cover;
   background-repeat: no-repeat;
