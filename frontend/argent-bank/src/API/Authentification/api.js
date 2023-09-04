@@ -16,7 +16,19 @@ export const api = createApi({
         },
       }),
     }),
+    profile: builder.mutation({
+      query: (token) => ({
+        url: "/profile",
+        method: "POST",
+        body: "",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+          Authorization: token,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation } = api;
+export const { useLoginMutation, useProfileMutation } = api;

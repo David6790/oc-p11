@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import Layout from "../layout/Layout";
-import { useLoginMutation } from "../API/Authentification/api";
+import { setUser } from "../features/users/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  useLoginMutation,
+  useProfileMutation,
+} from "../API/Authentification/api";
 import Cookies from "js-cookie";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginMutation, { isLoading, isError }] = useLoginMutation();
+  const [profileMutation] = useProfileMutation();
+  const isLoggedIn = useSelector((state) => state.user.userLoggedIn);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,21 +25,27 @@ const Login = () => {
     };
     try {
       const response = await loginMutation(credentials);
-      console.log(credentials);
-      console.log(response);
       const token = response.data.body.token;
-      console.log(token);
 
       Cookies.set("authToken", token, {
         httpOnly: false,
         secure: true,
         sameSite: "strict",
       });
-
       setEmail("");
       setPassword("");
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
+    }
+
+    try {
+      const authToken = Cookies.get("authToken");
+      const profile = await profileMutation(`Bearer ${authToken}`);
+      dispatch(setUser(profile));
+      console.log(profile);
+      console.log(isLoggedIn);
+    } catch (error) {
+      console.error("erreur lors de la connexion :", error);
     }
   };
   return (
@@ -43,7 +58,7 @@ const Login = () => {
             <label>Email</label>
             <input
               type="text"
-              id="username"
+              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -64,11 +79,6 @@ const Login = () => {
           <button className="sign-in-button" onClick={handleLogin}>
             {isLoading ? "Loading" : "Sign-In"}
           </button>
-          {isError ? (
-            <p>Identifiants erronés T'ES QU'UNE MERDE</p>
-          ) : (
-            <p>Connection Réussi bravo le DAV!!!</p>
-          )}
         </form>
       </section>
     </Layout>
