@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Layout from "../layout/Layout";
-import { setUser } from "../features/users/userSlice";
+import { setUser, logOut } from "../features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { userLoggedIn } from "../features/users/userSlice";
 
 import {
   useLoginMutation,
@@ -13,9 +14,9 @@ const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginMutation, { isLoading, isError }] = useLoginMutation();
+  const [loginMutation, { isLoading }] = useLoginMutation();
   const [profileMutation] = useProfileMutation();
-  const isLoggedIn = useSelector((state) => state.user.userLoggedIn);
+  const isLoggedIn = useSelector(userLoggedIn);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -43,10 +44,15 @@ const Login = () => {
       const profile = await profileMutation(`Bearer ${authToken}`);
       dispatch(setUser(profile));
       console.log(profile);
-      console.log(isLoggedIn);
     } catch (error) {
       console.error("erreur lors de la connexion :", error);
     }
+  };
+
+  const handleLogOut = (e) => {
+    e.preventDefault();
+    dispatch(logOut());
+    Cookies.remove("authToken");
   };
   return (
     <Layout className={"main bg-dark"}>
@@ -60,7 +66,9 @@ const Login = () => {
               type="text"
               id="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
             />
           </div>
           <div className="input-wrapper">
@@ -69,7 +77,9 @@ const Login = () => {
               type="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
           </div>
           <div className="input-remember">
@@ -79,6 +89,10 @@ const Login = () => {
           <button className="sign-in-button" onClick={handleLogin}>
             {isLoading ? "Loading" : "Sign-In"}
           </button>
+          <button className="sign-in-button" onClick={handleLogOut}>
+            LogOut
+          </button>
+          {isLoggedIn ? <p>Vous êtes connecté </p> : <p>pas connecté</p>}
         </form>
       </section>
     </Layout>

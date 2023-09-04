@@ -18,8 +18,16 @@ const userSlice = createSlice({
       state.lastName = payload.data.body.lastName;
       state.id = payload.data.body.id;
     },
+    logOut: (state) => {
+      state.userLoggedIn = false;
+      state.firstName = "";
+      state.lastName = "";
+      state.id = "";
+    },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, logOut } = userSlice.actions;
 export default userSlice.reducer;
+
+export const userLoggedIn = (state) => state.user.userLoggedIn;
