@@ -43,7 +43,8 @@ const Header = () => {
             className={"main-nav-item main-nav-button"}
             onClick={handleLogOut}
           >
-            <i className="fa fa-user-circle"></i>
+            {" "}
+            <i className="fa fa-sign-out"></i>
             Logout
           </button>
         )}

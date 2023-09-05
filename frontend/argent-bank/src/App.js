@@ -16,10 +16,8 @@ function App() {
 
   const relogAction = async () => {
     if (authToken) {
-      try {
-        const profile = await profileMutation(`Bearer ${authToken}`);
-        dispatch(setUser(profile));
-      } catch {}
+      const profile = await profileMutation(`Bearer ${authToken}`);
+      dispatch(setUser(profile));
     }
   };
 

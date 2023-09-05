@@ -4,8 +4,9 @@ const initialState = {
   userLoggedIn: false,
   firstName: "",
   lastName: "",
-  userName: "",
+  userName: "bonjour",
   id: "",
+  setEdit: false,
 };
 
 const userSlice = createSlice({
@@ -24,10 +25,21 @@ const userSlice = createSlice({
       state.lastName = "";
       state.id = "";
     },
+    changeUserName: (state, { payload }) => {
+      state.userName = payload.data.body.userName;
+    },
+    setEditMode: (state) => {
+      state.setEdit = !state.setEdit;
+    },
   },
 });
 
-export const { setUser, logOut } = userSlice.actions;
+export const { setUser, logOut, changeUserName, setEditMode } =
+  userSlice.actions;
 export default userSlice.reducer;
 
 export const userLoggedIn = (state) => state.user.userLoggedIn;
+export const userFirstName = (state) => state.user.firstName;
+export const userLastName = (state) => state.user.lastName;
+export const userName = (state) => state.user.userName;
+export const setEditUserName = (state) => state.user.setEdit;

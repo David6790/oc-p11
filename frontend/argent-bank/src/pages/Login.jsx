@@ -34,19 +34,16 @@ const Login = () => {
         secure: true,
         sameSite: "strict",
       });
-      setEmail("");
-      setPassword("");
-    } catch (error) {
-      console.error("Erreur lors de la connexion :", error);
-    }
 
-    try {
       const authToken = Cookies.get("authToken");
       const profile = await profileMutation(`Bearer ${authToken}`);
       dispatch(setUser(profile));
       navigate("/user");
+
+      setEmail("");
+      setPassword("");
     } catch (error) {
-      console.error("erreur lors de la connexion :", error);
+      console.error("Erreur lors de la connexion :", error);
     }
   };
 
