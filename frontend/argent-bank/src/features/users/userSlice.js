@@ -4,7 +4,7 @@ const initialState = {
   userLoggedIn: false,
   firstName: "",
   lastName: "",
-  userName: "bonjour",
+  userName: "",
   id: "",
   setEdit: false,
 };
@@ -23,7 +23,9 @@ const userSlice = createSlice({
       state.userLoggedIn = false;
       state.firstName = "";
       state.lastName = "";
+      state.userName = "";
       state.id = "";
+      state.setEdit = false;
     },
     changeUserName: (state, { payload }) => {
       state.userName = payload.data.body.userName;
