@@ -17,6 +17,7 @@ const userSlice = createSlice({
       state.userLoggedIn = true;
       state.firstName = payload.data.body.firstName;
       state.lastName = payload.data.body.lastName;
+      state.userName = payload.data.body.userName;
       state.id = payload.data.body.id;
     },
     logOut: (state) => {

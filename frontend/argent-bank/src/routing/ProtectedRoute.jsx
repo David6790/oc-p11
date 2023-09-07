@@ -6,7 +6,7 @@ import { userLoggedIn } from "../features/users/userSlice";
 const ProtectedRoute = () => {
   let user = useSelector(userLoggedIn);
 
-  return !user ? <Navigate to="/" /> : <Outlet />;
+  return !user ? <Navigate to="/login" /> : <Outlet />;
 };
 
 export default ProtectedRoute;

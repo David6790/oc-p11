@@ -103,7 +103,7 @@ paths:
         "500":
           description: Internal Server Error
 
-  /transactions/current:
+  /transactions/current-month:
     get:
       tags:
         - Transactions Module
@@ -116,6 +116,7 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Transaction"
+
         "500":
           description: Internal Server Error
 
@@ -236,7 +237,7 @@ definitions:
         example: 45.30
       description:
         type: string
-        example: "Lunch at Cafe"
+        example: "Lunch at Cafe de l'opera"
       date:
         type: string
         format: date
@@ -246,14 +247,14 @@ definitions:
         example: "Food & Beverages"
       notes:
         type: string
-        example: "Paid using debit card"
+        example: "it was excellent !!"
 
   TransactionUpdate:
     type: object
     properties:
       notes:
         type: string
-        example: "Paid using debit card"
+        example: "café de l'opera is the best restaurant in town"
       category:
         type: string
         example: "Food & Beverages"
