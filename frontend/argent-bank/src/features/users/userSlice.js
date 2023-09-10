@@ -4,6 +4,7 @@ const initialState = {
   userLoggedIn: false,
   userProfile: {},
   setEdit: false,
+  allowCookies: false,
 };
 
 const userSlice = createSlice({
@@ -25,10 +26,13 @@ const userSlice = createSlice({
       state.userProfile = {};
       state.setEdit = false;
     },
+    allowCookies: (state) => {
+      state.allowCookies = true;
+    },
   },
 });
 
-export const { setUser, logOut, changeUserName, setEditMode } =
+export const { setUser, logOut, changeUserName, setEditMode, allowCookies } =
   userSlice.actions;
 
 export default userSlice.reducer;
@@ -36,3 +40,4 @@ export default userSlice.reducer;
 export const userLoggedIn = (state) => state.user.userLoggedIn;
 export const setEditUserName = (state) => state.user.setEdit;
 export const userProfile = (state) => state.user.userProfile;
+export const okWithCookies = (state) => state.user.allowCookies;

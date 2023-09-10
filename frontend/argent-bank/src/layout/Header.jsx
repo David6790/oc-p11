@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { userLoggedIn, userProfile } from "../features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,14 +8,17 @@ import Cookies from "js-cookie";
 
 const Header = () => {
   const isLoggedIn = useSelector(userLoggedIn);
-
   const profile = useSelector(userProfile);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const handleLogOut = (e) => {
     e.preventDefault();
     dispatch(logOut());
     Cookies.remove("authToken");
+
+    sessionStorage.removeItem("authToken");
+    navigate("/");
   };
 
   return (

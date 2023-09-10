@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUsernameMutation } from "../API/Authentification/api";
 import Cookies from "js-cookie";
 import { changeUserName } from "../features/users/userSlice";
+import { okWithCookies } from "../features/users/userSlice";
 
 const EditNameForm = () => {
   const [updateUsernameMutation] = useUpdateUsernameMutation();
   const [userName, setUserName] = useState("");
   const profile = useSelector(userProfile);
   const dispatch = useDispatch();
+  const allowUseCookies = useSelector(okWithCookies);
 
   const cancelEdit = (e) => {
     e.preventDefault();
@@ -18,14 +20,22 @@ const EditNameForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const authToken = `Bearer ${Cookies.get("authToken")}`;
+    if (allowUseCookies) {
+      const authToken = `Bearer ${Cookies.get("authToken")}`;
+      const response = await updateUsernameMutation({
+        token: authToken,
+        newUserName: userName,
+      });
+      dispatch(changeUserName(response));
+    } else {
+      const authToken = `Bearer ${sessionStorage.getItem("authToken")}`;
+      const response = await updateUsernameMutation({
+        token: authToken,
+        newUserName: userName,
+      });
+      dispatch(changeUserName(response));
+    }
 
-    const response = await updateUsernameMutation({
-      token: authToken,
-      newUserName: userName,
-    });
-    console.log(response);
-    dispatch(changeUserName(response));
     dispatch(setEditMode());
   };
 

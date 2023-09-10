@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../layout/Layout";
 import { setUser } from "../features/users/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   useLoginMutation,
@@ -9,6 +9,8 @@ import {
 } from "../API/Authentification/api";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { okWithCookies } from "../features/users/userSlice";
+import UseCookies from "../Cookies/UseCookies";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -18,6 +20,7 @@ const Login = () => {
   const [getProfileMutation] = useGetProfileMutation();
 
   const navigate = useNavigate();
+  const allowUseCookies = useSelector(okWithCookies);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,16 +32,23 @@ const Login = () => {
       const response = await loginMutation(credentials);
       const token = response.data.body.token;
 
-      Cookies.set("authToken", token, {
-        httpOnly: false,
-        secure: true,
-        sameSite: "strict",
-      });
-
-      const authToken = Cookies.get("authToken");
-      const profile = await getProfileMutation(`Bearer ${authToken}`);
-      dispatch(setUser(profile));
-      navigate("/user");
+      if (allowUseCookies) {
+        Cookies.set("authToken", token, {
+          httpOnly: false,
+          secure: true,
+          sameSite: "strict",
+        });
+        const authToken = Cookies.get("authToken");
+        const profile = await getProfileMutation(`Bearer ${authToken}`);
+        dispatch(setUser(profile));
+        navigate("/user");
+      } else {
+        sessionStorage.setItem("authToken", token);
+        const authToken = sessionStorage.getItem("authToken");
+        const profile = await getProfileMutation(`Bearer ${authToken}`);
+        dispatch(setUser(profile));
+        navigate("/user");
+      }
 
       setEmail("");
       setPassword("");
@@ -48,7 +58,8 @@ const Login = () => {
   };
 
   return (
-    <Layout className={"main bg-dark"}>
+    <Layout className={"bg-dark main"}>
+      <UseCookies />
       <section className="sign-in-content">
         <i className="fa fa-user-circle sign-in-icon"></i>
         <h1>Sign In</h1>
@@ -83,7 +94,7 @@ const Login = () => {
           <button className="sign-in-button" onClick={handleLogin}>
             {isLoading ? "Loading" : "Sign-In"}
           </button>
-          {isError ? <p>Identifant ou mot de passe erronés</p> : ""}
+          {isError ? <p>Identifant ou mot de passe erroné</p> : ""}
         </form>
       </section>
     </Layout>

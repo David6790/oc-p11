@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 import Routeur from "./routing/Routeur";
 import { useGetProfileMutation } from "./API/Authentification/api";
 import { useDispatch } from "react-redux";
-import { setUser } from "./features/users/userSlice";
+import { allowCookies, setUser } from "./features/users/userSlice";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -17,6 +17,7 @@ function App() {
       setIsLoading(true);
       const profile = await getProfileMutation(`Bearer ${authToken}`);
       dispatch(setUser(profile));
+      dispatch(allowCookies());
       setIsLoading(false);
     } else {
       setIsLoading(false);
