@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 import { userLoggedIn } from "../features/users/userSlice";
 
 const ProtectedRoute = () => {
-  let user = useSelector(userLoggedIn);
+  const isUserLoggedIn = useSelector(userLoggedIn);
 
-  return !user ? <Navigate to="/login" /> : <Outlet />;
+  return !isUserLoggedIn ? <Navigate to="/login" /> : <Outlet />;
 };
 
 export default ProtectedRoute;

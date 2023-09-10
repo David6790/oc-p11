@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { setEditMode } from "../features/users/userSlice";
+import { setEditMode, userProfile } from "../features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { userLastName, userFirstName } from "../features/users/userSlice";
 import { useUpdateUsernameMutation } from "../API/Authentification/api";
 import Cookies from "js-cookie";
 import { changeUserName } from "../features/users/userSlice";
@@ -9,8 +8,7 @@ import { changeUserName } from "../features/users/userSlice";
 const EditNameForm = () => {
   const [updateUsernameMutation] = useUpdateUsernameMutation();
   const [userName, setUserName] = useState("");
-  const firstName = useSelector(userFirstName);
-  const lastName = useSelector(userLastName);
+  const profile = useSelector(userProfile);
   const dispatch = useDispatch();
 
   const cancelEdit = (e) => {
@@ -26,6 +24,7 @@ const EditNameForm = () => {
       token: authToken,
       newUserName: userName,
     });
+    console.log(response);
     dispatch(changeUserName(response));
     dispatch(setEditMode());
   };
@@ -40,11 +39,11 @@ const EditNameForm = () => {
         </div>
         <div className="formUnit">
           <label>First Name:</label>
-          <input type="text" placeholder={firstName} readOnly />
+          <input type="text" placeholder={profile.firstName} readOnly />
         </div>
         <div className="formUnit">
           <label>Last name:</label>
-          <input type="text" placeholder={lastName} readOnly />
+          <input type="text" placeholder={profile.lastName} readOnly />
         </div>
 
         <div className="editFormButtonContainer">

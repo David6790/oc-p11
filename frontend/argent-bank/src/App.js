@@ -1,23 +1,25 @@
 import Cookies from "js-cookie";
 import Routeur from "./routing/Routeur";
-import { useProfileMutation } from "./API/Authentification/api";
-import { useDispatch, useSelector } from "react-redux";
+import { useGetProfileMutation } from "./API/Authentification/api";
+import { useDispatch } from "react-redux";
 import { setUser } from "./features/users/userSlice";
-import { useEffect } from "react";
-import { userLoggedIn } from "./features/users/userSlice";
+import { useEffect, useState } from "react";
 
 function App() {
   const authToken = Cookies.get("authToken");
-  const [profileMutation] = useProfileMutation();
-  const dispatch = useDispatch();
 
-  const user = useSelector(userLoggedIn);
-  console.log(user);
+  const [getProfileMutation] = useGetProfileMutation();
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
   const relogAction = async () => {
     if (authToken) {
-      const profile = await profileMutation(`Bearer ${authToken}`);
+      setIsLoading(true);
+      const profile = await getProfileMutation(`Bearer ${authToken}`);
       dispatch(setUser(profile));
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
     }
   };
 
@@ -25,6 +27,13 @@ function App() {
     relogAction();
     // eslint-disable-next-line
   }, []);
+  if (isLoading) {
+    return (
+      <div className="loaderWait">
+        <p>Chargement en cours ...</p>
+      </div>
+    );
+  }
 
   return (
     <>

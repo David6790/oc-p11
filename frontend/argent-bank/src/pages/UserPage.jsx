@@ -2,17 +2,12 @@ import React from "react";
 import Layout from "../layout/Layout";
 import Account from "../component/Account";
 import EditNameForm from "../component/EditNameForm";
-import {
-  userFirstName,
-  setEditUserName,
-  userName,
-} from "../features/users/userSlice";
+import { setEditUserName, userProfile } from "../features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setEditMode } from "../features/users/userSlice";
 
 const UserPage = () => {
-  const firstName = useSelector(userFirstName);
-  const username = useSelector(userName);
+  const profile = useSelector(userProfile);
   const editMode = useSelector(setEditUserName);
   const dispatch = useDispatch();
 
@@ -29,7 +24,7 @@ const UserPage = () => {
           <h1>
             Welcome back
             <br />
-            {`${firstName} ${username}`}
+            {`${profile.firstName} ${profile.userName}`}
           </h1>
           <button className="edit-button" onClick={toogleEdit}>
             Edit Name

@@ -1,14 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { userLoggedIn } from "../features/users/userSlice";
+import { userLoggedIn, userProfile } from "../features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { userName } from "../features/users/userSlice";
+
 import { logOut } from "../features/users/userSlice";
 import Cookies from "js-cookie";
 
 const Header = () => {
   const isLoggedIn = useSelector(userLoggedIn);
-  const username = useSelector(userName);
+
+  const profile = useSelector(userProfile);
+
   const dispatch = useDispatch();
   const handleLogOut = (e) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ const Header = () => {
         {isLoggedIn ? (
           <NavLink to="/user" className={"main-nav-item"}>
             <i className="fa fa-user-circle"></i>
-            {username ? username : "Profile"}
+            {profile ? profile.userName : "Profile"}
           </NavLink>
         ) : (
           <NavLink to="/login" className={"main-nav-item"}>

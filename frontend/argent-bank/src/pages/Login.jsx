@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 
 import {
   useLoginMutation,
-  useProfileMutation,
+  useGetProfileMutation,
 } from "../API/Authentification/api";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +14,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginMutation, { isLoading }] = useLoginMutation();
-  const [profileMutation] = useProfileMutation();
+  const [loginMutation, { isLoading, isError }] = useLoginMutation();
+  const [getProfileMutation] = useGetProfileMutation();
 
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const Login = () => {
       });
 
       const authToken = Cookies.get("authToken");
-      const profile = await profileMutation(`Bearer ${authToken}`);
+      const profile = await getProfileMutation(`Bearer ${authToken}`);
       dispatch(setUser(profile));
       navigate("/user");
 
@@ -83,6 +83,7 @@ const Login = () => {
           <button className="sign-in-button" onClick={handleLogin}>
             {isLoading ? "Loading" : "Sign-In"}
           </button>
+          {isError ? <p>Identifant ou mot de passe erronés</p> : ""}
         </form>
       </section>
     </Layout>
