@@ -40,4 +40,4 @@ export default userSlice.reducer;
 export const userLoggedIn = (state) => state.user.userLoggedIn;
 export const setEditUserName = (state) => state.user.setEdit;
 export const userProfile = (state) => state.user.userProfile;
-export const okWithCookies = (state) => state.user.allowCookies;
+export const acceptCookies = (state) => state.user.allowCookies;

@@ -4,6 +4,7 @@ import { useGetProfileMutation } from "./API/Authentification/api";
 import { useDispatch } from "react-redux";
 import { allowCookies, setUser } from "./features/users/userSlice";
 import { useEffect, useState } from "react";
+import UseCookies from "./Cookies/UseCookies";
 
 function App() {
   const authToken = Cookies.get("authToken");
@@ -21,6 +22,7 @@ function App() {
       setIsLoading(false);
     } else {
       setIsLoading(false);
+      Cookies.remove("authorizeCookies");
     }
   };
 
@@ -39,6 +41,7 @@ function App() {
   return (
     <>
       <Routeur />
+      <UseCookies />
     </>
   );
 }

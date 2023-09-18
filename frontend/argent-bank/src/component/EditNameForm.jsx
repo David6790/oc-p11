@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUsernameMutation } from "../API/Authentification/api";
 import Cookies from "js-cookie";
 import { changeUserName } from "../features/users/userSlice";
-import { okWithCookies } from "../features/users/userSlice";
+import { acceptCookies } from "../features/users/userSlice";
 
 const EditNameForm = () => {
   const [updateUsernameMutation] = useUpdateUsernameMutation();
   const [userName, setUserName] = useState("");
   const profile = useSelector(userProfile);
   const dispatch = useDispatch();
-  const allowUseCookies = useSelector(okWithCookies);
+  const allowUseCookies = useSelector(acceptCookies);
 
   const cancelEdit = (e) => {
     e.preventDefault();

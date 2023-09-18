@@ -1,13 +1,14 @@
 import React from "react";
-import CookieConsent, { Cookies } from "react-cookie-consent";
-
+import CookieConsent from "react-cookie-consent";
+import { acceptCookies } from "../features/users/userSlice";
 import { allowCookies } from "../features/users/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const UseCookies = () => {
   const dispatch = useDispatch();
-  const authToken = Cookies.get("authToken");
-  return !authToken ? (
+  const okCookies = useSelector(acceptCookies);
+
+  return !okCookies ? (
     <CookieConsent
       location="bottom"
       buttonText="I Agree"

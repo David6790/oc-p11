@@ -16,7 +16,7 @@ const Header = () => {
     e.preventDefault();
     dispatch(logOut());
     Cookies.remove("authToken");
-
+    Cookies.remove("authorizeCookies");
     sessionStorage.removeItem("authToken");
     navigate("/");
   };

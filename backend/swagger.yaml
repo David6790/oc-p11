@@ -1,13 +1,14 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: Bank Argent API documentation
   description: Contains all available API endpoints in this codebase
-  version: '1.0.0'
-  termsOfService: 'http://swagger.io/terms/'
+  version: "1.0.0"
+  termsOfService: "http://swagger.io/terms/"
 host: localhost:3001
 basePath: /api/v1
 schemes:
   - http
+
 paths:
   /user/login:
     post:
@@ -21,18 +22,19 @@ paths:
           description: Login Payload
           required: true
           schema:
-            $ref: '#/definitions/Login'
+            $ref: "#/definitions/Login"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Login Successfully
           schema:
-            $ref: '#/definitions/LoginResponse'
-        '400':
+            $ref: "#/definitions/LoginResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
+
   /user/signup:
     post:
       tags:
@@ -45,18 +47,19 @@ paths:
           description: Signup Payload
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: "#/definitions/User"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Signup Successfully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
+
   /user/profile:
     post:
       security:
@@ -65,16 +68,14 @@ paths:
         - User Module
       summary: User Profile API
       description: API for fetching a user profile
-      #produces:
-       # - application/json
       responses:
-        '200':
+        "200":
           description: User profile retrieved successully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
     put:
       security:
@@ -89,70 +90,205 @@ paths:
           description: Update user profile attributes
           required: true
           schema:
-            $ref: '#/definitions/UserProfile'
+            $ref: "#/definitions/UserProfile"
       produces:
         - application/json
       responses:
-        '200':
-          description: User profile retrieved successully
+        "200":
+          description: User profile updated successfully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
+
+  /transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get List of Transactions
+      description: Retrieve all transactions and apply filter
+      parameters:
+        - in: query
+          name: month
+          description: month of transaction
+          required: false
+          type: string
+        - in: query
+          name: page
+          description: page number
+          required: true
+          type: integer
+          default: 1
+        - in: query
+          name: perPage
+          description: number of transactions per page
+          required: true
+          type: integer
+          default: 10
+
+      responses:
+        "200":
+          description: Successfully retrieved transactions for the logged user
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Transaction"
+        "403":
+          description: Not Authorized
+        "500":
+          description: Internal Server Error
+
+  /transactions/{transactionId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get Transaction Details
+      description: Retrieve details of a specific transaction
+      parameters:
+        - in: path
+          name: transactionId
+          description: ID of the transaction
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Successfully retrieved transaction details
+          schema:
+            $ref: "#/definitions/Transaction"
+        "403":
+          description: Not Authorized
+        "404":
+          description: Transaction not found
+        "500":
+          description: Internal Server Error
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Update Transaction Details
+      description: Update details of a specific transaction
+      parameters:
+        - in: path
+          name: transactionId
+          description: ID of the transaction
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Transaction attributes to update
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionUpdate"
+
+      responses:
+        "200":
+          description: Successfully updated transaction details
+          schema:
+            $ref: "#/definitions/ApiResponse"
+
+        "400":
+          description: Invalid Fields
+        "403":
+          description: Not Authorized
+        "404":
+          description: Transaction not found
+        "500":
+          description: Internal Server Error
+
 securityDefinitions:
   Bearer:
     type: apiKey
     name: Authorization
     in: header
+
 definitions:
   User:
     properties:
       email:
         type: string
-        description: user email
+        example: "johndoe@example.com"
       password:
         type: string
-        description: user password
+        example: "password123"
       firstName:
         type: string
-        description: user first name
+        example: "John"
       lastName:
         type: string
-        description: user last name
+        example: "Doe"
       userName:
         type: string
-        description: user public name
+        example: "john_doe"
+
   Login:
     properties:
       email:
         type: string
-        description: user email
+        example: "johndoe@example.com"
       password:
         type: string
-        description: user password
+        example: "password123"
+
+  LoginResponse:
+    properties:
+      token:
+        type: string
+        example: "abcdef123456"
+
+  UserProfile:
+    properties:
+      userName:
+        type: string
+        example: "john_doe"
+
   ApiResponse:
     type: object
     properties:
       status:
         type: integer
+        example: 200
       message:
         type: string
+        example: "Operation Successful"
       body:
         type: object
-        properties:
-          id:
-            type: string
-          email:
-            type: string
-  LoginResponse:
+
+  Transaction:
+    properties:
+      id:
+        type: string
+        example: "txn_1234567890"
+      amount:
+        type: number
+        format: float
+        example: 45.30
+      description:
+        type: string
+        example: "Lunch at Cafe de l'opera"
+      date:
+        type: string
+        format: date
+        example: "2023-01-23"
+      category:
+        type: string
+        example: "Food & Beverages"
+      note:
+        type: string
+        example: "it was excellent !!"
+
+  TransactionUpdate:
     type: object
     properties:
-      token:
+      note:
         type: string
-  UserProfile:
-    type: object
-    properties:
-      userName:
+        example: "café de l'opera is the best restaurabt in town"
+      category:
         type: string
+        example: "Food & Beverages"

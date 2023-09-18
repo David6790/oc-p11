@@ -9,7 +9,7 @@ import {
 } from "../API/Authentification/api";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { okWithCookies } from "../features/users/userSlice";
+import { acceptCookies } from "../features/users/userSlice";
 import UseCookies from "../Cookies/UseCookies";
 
 const Login = () => {
@@ -20,7 +20,7 @@ const Login = () => {
   const [getProfileMutation] = useGetProfileMutation();
 
   const navigate = useNavigate();
-  const allowUseCookies = useSelector(okWithCookies);
+  const allowUseCookies = useSelector(acceptCookies);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -39,6 +39,7 @@ const Login = () => {
           sameSite: "strict",
         });
         const authToken = Cookies.get("authToken");
+
         const profile = await getProfileMutation(`Bearer ${authToken}`);
         dispatch(setUser(profile));
         navigate("/user");
